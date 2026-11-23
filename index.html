@@ -650,6 +650,18 @@ html[data-theme]:not([data-theme=dighital]) .layRow{background:var(--surface);co
 .alIcons svg{width:20px;height:20px;display:block}
 .alIcons button.danger:hover{color:#DC2626;background:#FEF2F2}
 .alIcons button:hover{color:var(--b);background:#EFF6FF}
+.uiToggle{position:absolute;left:12px;bottom:12px;z-index:7;width:44px;height:44px;padding:0;display:grid;place-items:center;border-radius:14px;background:rgba(255,255,255,.92);border:1px solid var(--ln);box-shadow:0 10px 24px -10px rgba(15,23,42,.35);color:var(--ink);min-height:44px}
+.uiToggle svg{width:20px;height:20px}
+.uiToggle.on{background:var(--b);color:#fff;border-color:var(--b)}
+#ed.propsHidden .props{display:none!important}
+#ed.uiHidden #rail,#ed.uiHidden .props,#ed.uiHidden #panel{display:none!important}
+#ed.uiHidden{grid-template-columns:1fr;grid-template-rows:auto 1fr}
+#ed.uiHidden .top{grid-column:1}
+#ed.uiHidden #stage{grid-column:1;grid-row:2}
+body:has(#ed.uiHidden) #bnav{display:none}
+body:has(#ed.uiHidden) .dgPanel{display:none!important}
+#ed .props .pxBtn{position:sticky;top:0;margin:0 0 6px auto;display:none}
+@media (max-width:900px){#ed .props .pxBtn{display:grid}}
 </style>
 </head>
 <body>
@@ -837,9 +849,9 @@ html[data-theme]:not([data-theme=dighital]) .layRow{background:var(--surface);co
     </div>
     <div id="obar" class="hid"><button data-act="dup" title="Duplikat"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button><button data-act="front" title="Naik ke depan"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M4 16V4a2 2 0 0 1 2-2h10"/></svg></button><button data-act="behind" title="Turun ke belakang"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="12" height="12" rx="2"/><path d="M20 8v12a2 2 0 0 1-2 2H6"/></svg></button><button data-act="rm" title="Hapus latar putih"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21l9-9M15 4V2M15 16v-2M8 9h2M20 9h2M17.8 11.8L19 13M17.8 6.2L19 5M12.2 6.2L11 5"/></svg></button><button data-act="del" title="Hapus"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6M10 11v6M14 11v6"/></svg></button></div>
     <div id="dgCursor" class="hid"></div><div id="dropov" class="hid">Lepaskan untuk menambahkan foto</div>
-    <button id="prevFab" class="prevFab" title="Lihat desain di mockup media sosial"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="2.5" width="12" height="19" rx="3"/><path d="M11 18.5h2"/></svg><span>Preview</span></button><div id="toast"></div>
+    <button id="uiToggle" class="uiToggle" title="Sembunyikan alat" aria-label="Sembunyikan alat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button><button id="prevFab" class="prevFab" title="Lihat desain di mockup media sosial"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="2.5" width="12" height="19" rx="3"/><path d="M11 18.5h2"/></svg><span>Preview</span></button><div id="toast"></div>
   </div>
-  <div class="props">
+  <div class="props"><button id="propsX" class="pxBtn" aria-label="Tutup properti">×</button>
     <h4>Latar</h4>
     <div class="row"><label>Warna</label><input type="color" id="bgC" value="#ffffff"></div>
     <h4>Objek terpilih</h4>
@@ -871,6 +883,7 @@ html[data-theme]:not([data-theme=dighital]) .layRow{background:var(--surface);co
 <nav id="bnav"><button class="bn" data-nav="back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg><span>Kembali</span></button><button class="bn" data-nav="hist"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l3 2"/></svg><span>Riwayat</span></button><button class="bn" data-nav="todo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6l2 2 3-3M3 13l2 2 3-3M3 20l2 2 3-3"/><path d="M12 6h9M12 13h9M12 20h9"/></svg><span>To-do</span></button><button class="bn" data-nav="fin"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M16 12.5h2M3 10h18"/></svg><span>Keuangan</span></button><button class="bn" data-nav="links"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"/></svg><span>Link</span></button><button class="bn" data-nav="theme"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2a10 10 0 0 0 0 20 2 2 0 0 0 2-2c0-.6-.3-1-.3-1.5 0-1 .8-1.5 1.8-1.5H18a4 4 0 0 0 4-4c0-5-4.5-9-10-9z"/><circle cx="7.5" cy="11.5" r=".9" fill="currentColor"/><circle cx="9.5" cy="7.5" r=".9" fill="currentColor"/><circle cx="14.5" cy="7.5" r=".9" fill="currentColor"/></svg><span>Tema</span></button></nav>
 <script>
 const $ = id => document.getElementById(id);
+let lastSelObj = null;
 const EMONEY = {
   gopay: { name: 'GoPay', c: 'linear-gradient(135deg,#00AED6,#0E7FA0)' },
   ovo: { name: 'OVO', c: 'linear-gradient(135deg,#4C3494,#2D1E5F)' },
@@ -1188,6 +1201,8 @@ function sync() {
   const o = active();
   $('pNone').classList.toggle('hid', !!o);
   $('pObj').classList.toggle('hid', !o);
+  if (o && o !== lastSelObj) $('ed').classList.remove('propsHidden');
+  lastSelObj = o || null;
   syncTbar(o);
   $('ed').classList.toggle('hasSel', !!o);
   $('ed').classList.toggle('isImg', !!o && o.type === 'image');
@@ -2871,6 +2886,17 @@ function toggleBgCut(o) {
 }
 $('rmBg').onclick = () => toggleBgCut(active());
 $('rmBg').title = 'Hapus latar (putih di tepi)'; $('rmBg').setAttribute('aria-label', 'Hapus latar');
+// ===== Sembunyikan alat agar kanvas bisa dilihat penuh (terutama di HP) =====
+$('uiToggle').onclick = () => {
+  const hidden = $('ed').classList.toggle('uiHidden');
+  $('uiToggle').classList.toggle('on', hidden);
+  $('uiToggle').title = hidden ? 'Tampilkan alat' : 'Sembunyikan alat';
+  $('uiToggle').setAttribute('aria-label', $('uiToggle').title);
+  $('uiToggle').innerHTML = hidden
+    ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6-6 6 6"/></svg>'
+    : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>';
+};
+$('propsX').onclick = () => $('ed').classList.add('propsHidden');
 let armedBtn = null, armedTimer = null;
 function armDelete(btn, fn) {
   if (armedBtn === btn) { clearTimeout(armedTimer); armedBtn = null; btn.classList.remove('armed'); fn(); return; }
