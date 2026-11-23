@@ -645,6 +645,11 @@ html[data-theme]:not([data-theme=dighital]) .layRow{background:var(--surface);co
 @keyframes fxWipe{to{clip-path:inset(0 0 0 0)}}
 #fxSkip{position:absolute;right:16px;bottom:24px;background:rgba(15,23,42,.06);border:0;border-radius:999px;padding:8px 14px;font-size:13px;font-weight:700;color:#334155;min-height:0;z-index:2}
 @media (prefers-reduced-motion: reduce){#fx{display:none}}
+.alIcons{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:10px}
+.alIcons button{min-height:46px;aspect-ratio:1;padding:0;display:grid;place-items:center;border-radius:14px;width:100%}
+.alIcons svg{width:20px;height:20px;display:block}
+.alIcons button.danger:hover{color:#DC2626;background:#FEF2F2}
+.alIcons button:hover{color:var(--b);background:#EFF6FF}
 </style>
 </head>
 <body>
@@ -768,15 +773,37 @@ html[data-theme]:not([data-theme=dighital]) .layRow{background:var(--surface);co
       <small>Tautan harus langsung ke file gambar dan server tujuan harus mengizinkan akses dari luar.</small>
     </div>
     <div class="ptab hid" id="p-tools">
-      <h4>Alat gambar</h4>
-      <button id="rmBg"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21l9-9M15 4V2M15 16v-2M8 9h2M20 9h2M17.8 11.8L19 13M17.8 6.2L19 5M12.2 6.2L11 5"/></svg>&nbsp; Hapus latar putih</button>
-      <button id="dup">Duplikat</button>
-      <button id="front">Naik ke depan</button>
-      <button id="behind">Turun ke belakang</button>
-      <button id="del">Hapus objek</button>
-      <h4>Susun objek</h4><div class="alGrid"><button data-al="left">Rata kiri</button><button data-al="hcenter">Tengah horizontal</button><button data-al="right">Rata kanan</button><button data-al="top">Rata atas</button><button data-al="vcenter">Tengah vertikal</button><button data-al="bottom">Rata bawah</button><button data-al="dist-h">Jarak horizontal sama</button><button data-al="dist-v">Jarak vertikal sama</button></div><div class="alGrid"><button id="grpBtn">Gabung (Ctrl+G)</button><button id="ungrpBtn">Pisahkan</button></div><h4>Transformasi</h4><div class="alGrid"><button id="flipXBtn">Balik horizontal</button><button id="flipYBtn">Balik vertikal</button><button id="rot90Btn">Putar 90°</button></div>
+      <h4>Edit objek</h4>
+      <div class="alIcons">
+        <button id="rmBg" title="Hapus latar putih" aria-label="Hapus latar putih"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 4V2M15 16v-2M8 9h2M20 9h2M17.8 11.8L19 13M17.8 6.2L19 5M3 21l9-9M12.2 6.2L11 5"/></svg></button>
+        <button id="dup" title="Duplikat" aria-label="Duplikat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+        <button id="front" title="Naik ke depan" aria-label="Naik ke depan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M4 16V4a2 2 0 0 1 2-2h10"/></svg></button>
+        <button id="behind" title="Turun ke belakang" aria-label="Turun ke belakang"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="12" height="12" rx="2"/><path d="M20 8v12a2 2 0 0 1-2 2H6"/></svg></button>
+        <button id="del" title="Hapus objek" aria-label="Hapus objek" class="danger"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6M10 11v6M14 11v6"/></svg></button>
+      </div>
+      <h4>Susun objek</h4>
+      <div class="alIcons">
+        <button title="Rata kiri" aria-label="Rata kiri" data-al="left"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18"/><rect x="7" y="6" width="13" height="4" rx="1"/><rect x="7" y="14" width="8" height="4" rx="1"/></svg></button>
+        <button title="Tengah horizontal" aria-label="Tengah horizontal" data-al="hcenter"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18"/><rect x="6" y="6" width="12" height="4" rx="1"/><rect x="8" y="14" width="8" height="4" rx="1"/></svg></button>
+        <button title="Rata kanan" aria-label="Rata kanan" data-al="right"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 3v18"/><rect x="4" y="6" width="13" height="4" rx="1"/><rect x="9" y="14" width="8" height="4" rx="1"/></svg></button>
+        <button title="Rata atas" aria-label="Rata atas" data-al="top"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3h18"/><rect x="6" y="7" width="4" height="13" rx="1"/><rect x="14" y="7" width="4" height="8" rx="1"/></svg></button>
+        <button title="Tengah vertikal" aria-label="Tengah vertikal" data-al="vcenter"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12h18"/><rect x="6" y="6" width="4" height="12" rx="1"/><rect x="14" y="8" width="4" height="8" rx="1"/></svg></button>
+        <button title="Rata bawah" aria-label="Rata bawah" data-al="bottom"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21h18"/><rect x="6" y="4" width="4" height="13" rx="1"/><rect x="14" y="9" width="4" height="8" rx="1"/></svg></button>
+        <button title="Jarak horizontal sama" aria-label="Jarak horizontal sama" data-al="dist-h"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18M21 3v18"/><rect x="9" y="8" width="6" height="8" rx="1"/></svg></button>
+        <button title="Jarak vertikal sama" aria-label="Jarak vertikal sama" data-al="dist-v"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3h18M3 21h18"/><rect x="8" y="9" width="8" height="6" rx="1"/></svg></button>
+        <button id="grpBtn" title="Gabung (Ctrl+G)" aria-label="Gabung (Ctrl+G)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="8" height="8" rx="1"/><rect x="13" y="13" width="8" height="8" rx="1"/><path d="M11 7h2v2M7 11v2h2"/></svg></button>
+        <button id="ungrpBtn" title="Pisahkan" aria-label="Pisahkan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></button>
+      </div>
+      <h4>Transformasi</h4>
+      <div class="alIcons">
+        <button id="flipXBtn" title="Balik horizontal" aria-label="Balik horizontal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18"/><path d="M8 7l-5 5 5 5V7z"/><path d="M16 7l5 5-5 5V7z"/></svg></button>
+        <button id="flipYBtn" title="Balik vertikal" aria-label="Balik vertikal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12h18"/><path d="M7 8l5-5 5 5H7z"/><path d="M7 16l5 5 5-5H7z"/></svg></button>
+        <button id="rot90Btn" title="Putar 90°" aria-label="Putar 90°"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></svg></button>
+      </div>
       <h4>Font</h4>
-      <button id="impFont">Impor font (.ttf, .otf, .woff)</button>
+      <div class="alIcons">
+        <button id="impFont" title="Impor font (.ttf, .otf, .woff)" aria-label="Impor font (.ttf, .otf, .woff)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7V4h16v3M9 20h6M12 4v16"/></svg></button>
+      </div>
       <input type="file" id="fontIn" accept=".ttf,.otf,.woff,.woff2" class="hid">
     </div>
     <div class="ptab hid" id="p-lay"><h4>Lapisan</h4><div id="layList" class="layList"></div><small>Klik nama untuk memilih. Yang paling atas tampil paling depan.</small></div><div class="ptab hid" id="p-proj">
@@ -2784,6 +2811,66 @@ $('rot90Btn').onclick = () => { const o = active(); if (o) { o.rotate(((o.angle 
   fx.addEventListener('animationend', e => { if (e.animationName === 'fxOut') end(); });
   setTimeout(end, 5800);
 })();
+// ===== Hapus latar: hanya area putih yang tersambung ke tepi foto yang dihapus; putih di dalam objek tetap =====
+function floodClearBg(px, w, h) {
+  const seen = new Uint8Array(w * h), q = new Int32Array(w * h);
+  let qh = 0, qt = 0;
+  const isBg = i => { const p = i * 4, r = px[p], g = px[p + 1], b = px[p + 2]; const mn = Math.min(r, g, b), mx = Math.max(r, g, b); return mn >= 228 && mx - mn <= 28; };
+  const push = i => { if (!seen[i] && isBg(i)) { seen[i] = 1; q[qt++] = i; } };
+  for (let x = 0; x < w; x++) { push(x); push((h - 1) * w + x); }
+  for (let y = 0; y < h; y++) { push(y * w); push(y * w + w - 1); }
+  while (qh < qt) {
+    const i = q[qh++]; px[i * 4 + 3] = 0;
+    const x = i % w;
+    if (x > 0) push(i - 1);
+    if (x < w - 1) push(i + 1);
+    if (i >= w) push(i - w);
+    if (i < (h - 1) * w) push(i + w);
+  }
+  return px;
+}
+function cutBackground(src, cb) {
+  const el = new Image(); el.crossOrigin = 'anonymous';
+  el.onload = () => {
+    try {
+      const w = el.naturalWidth, h = el.naturalHeight;
+      const c = document.createElement('canvas'); c.width = w; c.height = h;
+      const x = c.getContext('2d'); x.drawImage(el, 0, 0);
+      const d = x.getImageData(0, 0, w, h);
+      floodClearBg(d.data, w, h);
+      x.putImageData(d, 0, 0);
+      cb(c.toDataURL('image/png'));
+    } catch (e) { toast('Foto ini tidak bisa diproses di sini'); }
+  };
+  el.onerror = () => toast('Gambar tidak bisa dibuka');
+  el.src = src;
+}
+function swapImage(old, src, done) {
+  const el = new Image(); el.crossOrigin = 'anonymous';
+  el.onload = () => {
+    const n = new fabric.Image(el);
+    n.set({ left: old.left, top: old.top, originX: old.originX, originY: old.originY, angle: old.angle, flipX: old.flipX, flipY: old.flipY, opacity: old.opacity, scaleX: old.scaleX, scaleY: old.scaleY });
+    n.filters = old.filters || []; if (n.filters.length) n.applyFilters();
+    n._origSrc = old._origSrc; n._bgCut = old._bgCut;
+    const idx = canvas.getObjects().indexOf(old);
+    canvas.remove(old); canvas.add(n); canvas.moveTo(n, idx);
+    canvas.setActiveObject(n); canvas.requestRenderAll(); autosave();
+    if (done) done(n);
+  };
+  el.onerror = () => toast('Gambar tidak bisa dibuka');
+  el.src = src;
+}
+function toggleBgCut(o) {
+  if (!o || o.type !== 'image') return toast('Pilih foto dulu');
+  if (o._bgCut && o._origSrc) { swapImage(o, o._origSrc, n => { n._bgCut = false; toast('Latar dikembalikan'); }); return; }
+  const src = o._origSrc || (o._element && o._element.src);
+  if (!src) return toast('Foto ini tidak bisa diproses');
+  o._origSrc = src;
+  toast('Menghapus latar…');
+  cutBackground(src, url => swapImage(o, url, n => { n._bgCut = true; toast('Latar dihapus. Detail putih di dalam foto tetap'); }));
+}
+$('rmBg').onclick = () => toggleBgCut(active());
+$('rmBg').title = 'Hapus latar (putih di tepi)'; $('rmBg').setAttribute('aria-label', 'Hapus latar');
 let armedBtn = null, armedTimer = null;
 function armDelete(btn, fn) {
   if (armedBtn === btn) { clearTimeout(armedTimer); armedBtn = null; btn.classList.remove('armed'); fn(); return; }
