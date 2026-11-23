@@ -920,7 +920,7 @@ $('home').addEventListener('click', e => {
   const p = e.target.closest('[data-i]');
   if (p) { const d = PRESETS[p.dataset.i]; return openNew(d[1], d[2], d[0]); }
   const del = e.target.closest('[data-del]');
-  if (del) { hist = hist.filter(d => d.id !== del.dataset.del); saveLS(LS, hist); return renderHome(); }
+  if (del) { hist = hist.filter(d => d.id !== del.dataset.del); saveHist(); return renderHome(); }
   const h = e.target.closest('[data-id]');
   if (h) return openDesign(hist.find(d => d.id === h.dataset.id));
   const td = e.target.closest('[data-tdel]');
@@ -1007,12 +1007,12 @@ function saveNow() {
   if (i >= 0 && hist[i].thumb) rec.thumb = hist[i].thumb;
   if (i >= 0) hist[i] = rec; else hist.unshift(rec);
   hist = hist.slice(0, 120);
-  const ok = saveLS(LS, hist);
+  saveHist(); const ok = true;
   $('saveBtn').textContent = ok ? 'Tersimpan ✓' : 'Penyimpanan penuh';
   if (!ok) toast('Penyimpanan browser penuh. Hapus proyek lama atau kecilkan gambar.');
   makeThumb(json, w, h, url => {
     const r = hist.find(d => d.id === id);
-    if (r && url) { r.thumb = url; saveLS(LS, hist); renderHome(); renderScape(); }
+    if (r && url) { r.thumb = url; saveHist(); renderHome(); renderScape(); }
   });
 }
 // Pratinjau asli dari isi kanvas, dibuat di kanvas tersembunyi agar editor tidak terganggu
@@ -2012,9 +2012,9 @@ new MutationObserver(ms => ms.forEach(m => m.addedNodes.forEach(n => {
 function scapeAdd(w, h, name) {
   const id = 's' + Date.now();
   const rec = { id, name: name || 'Canvas ' + w + '×' + h, w, h, t: Date.now(), group: 'scape', json: { version: '5.3.0', objects: [], background: '#ffffff' } };
-  hist.unshift(rec); hist = hist.slice(0, 120); saveLS(LS, hist);
+  hist.unshift(rec); hist = hist.slice(0, 120); saveHist();
   renderScape();
-  makeThumb(rec.json, w, h, url => { const r = hist.find(d => d.id === id); if (r && url) { r.thumb = url; saveLS(LS, hist); renderScape(); } });
+  makeThumb(rec.json, w, h, url => { const r = hist.find(d => d.id === id); if (r && url) { r.thumb = url; saveHist(); renderScape(); } });
 }
 function openScape() {
   $('scape').classList.remove('hid'); $('home').classList.add('hid'); $('logo').classList.add('hid');
@@ -2036,13 +2036,13 @@ $('scape').addEventListener('click', e => {
     if (src) {
       const copy = JSON.parse(JSON.stringify(src));
       Object.assign(copy, { id: 's' + Date.now(), name: src.name + ' (salinan)', t: Date.now(), pos: { x: (src.pos ? src.pos.x : 24) + 40, y: (src.pos ? src.pos.y : 24) + 40 } });
-      hist.unshift(copy); hist = hist.slice(0, 120); saveLS(LS, hist); renderScape();
+      hist.unshift(copy); hist = hist.slice(0, 120); saveHist(); renderScape();
     }
     return;
   }
   const o = e.target.closest('[data-sc-open]'); if (o) return scapeOpen(o.dataset.scOpen);
   const dl = e.target.closest('[data-sc-del]');
-  if (dl) { return armDelete(dl, () => { const id = dl.dataset.scDel; hist = hist.filter(d => d.id !== id); saveLS(LS, hist); renderScape(); }); }
+  if (dl) { return armDelete(dl, () => { const id = dl.dataset.scDel; hist = hist.filter(d => d.id !== id); saveHist(); renderScape(); }); }
   const sp = e.target.closest('[data-sp]'); if (sp) { const p = PRESETS[+sp.dataset.sp]; return scapeAdd(p[1], p[2], p[0]); }
   if (e.target.closest('#scCustom')) { const w = Math.round(+$('scW').value), h = Math.round(+$('scH').value); if (w >= 100 && h >= 100 && w <= 6000 && h <= 6000) scapeAdd(w, h, 'Canvas kustom'); }
 });
@@ -2068,7 +2068,7 @@ function renderScape() {
       cx += scW(d) + 48; rowH = Math.max(rowH, SC_H + 80);
     }
   });
-  if (assigned) saveLS(LS, hist);
+  if (assigned) saveHist();
   if (!list.length) { $('scapeList').innerHTML = '<div class="tdEmpty">' + svgIc('folder') + '<b>Papanmu masih kosong</b><small>Pilih format di atas untuk menambahkan desain pertama.</small></div>'; return; }
   const bw = Math.max(...list.map(d => d.pos.x + scW(d))) + 80;
   const bh = Math.max(...list.map(d => d.pos.y + SC_H + 90)) + 80;
@@ -2091,7 +2091,7 @@ document.addEventListener('pointermove', e => {
 function scDragEnd() {
   if (!scDrag) return;
   const d = hist.find(x => x.id === scDrag.id);
-  if (d) { d.pos = { x: scDrag.nx, y: scDrag.ny }; saveLS(LS, hist); }
+  if (d) { d.pos = { x: scDrag.nx, y: scDrag.ny }; saveHist(); }
   scDrag.card.classList.remove('dragging');
   scDrag = null;
   renderScape();
@@ -2897,6 +2897,49 @@ $('uiToggle').onclick = () => {
     : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>';
 };
 $('propsX').onclick = () => $('ed').classList.add('propsHidden');
+// ===== Penyimpanan karya di IndexedDB (kapasitas jauh lebih besar dari localStorage) =====
+let kvDb = null;
+function openKv() {
+  return new Promise((res, rej) => {
+    if (!('indexedDB' in window)) return rej(new Error('noidb'));
+    const r = indexedDB.open('dghCH', 1);
+    r.onupgradeneeded = () => r.result.createObjectStore('kv');
+    r.onsuccess = () => res(r.result);
+    r.onerror = () => rej(r.error);
+  });
+}
+async function kvSet(k, v) {
+  try {
+    if (!kvDb) kvDb = await openKv();
+    await new Promise((res, rej) => {
+      const tx = kvDb.transaction('kv', 'readwrite');
+      tx.objectStore('kv').put(v, k);
+      tx.oncomplete = () => res();
+      tx.onerror = () => rej(tx.error);
+      tx.onabort = () => rej(tx.error || new Error('abort'));
+    });
+  } catch (e) {
+    if (!saveLS(k, v)) throw e; // cadangan terakhir: localStorage
+  }
+}
+async function kvGet(k) {
+  try {
+    if (!kvDb) kvDb = await openKv();
+    return await new Promise((res, rej) => {
+      const r = kvDb.transaction('kv').objectStore('kv').get(k);
+      r.onsuccess = () => res(r.result);
+      r.onerror = () => rej(r.error);
+    });
+  } catch (e) { return null; }
+}
+function saveHist() {
+  kvSet(LS, hist).catch(() => toast('Penyimpanan penuh. Hapus karya lama atau kecilkan gambar.'));
+}
+// Muat karya dari IndexedDB; jika belum ada, pindahkan data lama dari localStorage (tidak dihapus)
+kvGet(LS).then(v => {
+  if (Array.isArray(v)) { hist = v; renderHome(); renderScape(); }
+  else if (hist.length) saveHist();
+});
 let armedBtn = null, armedTimer = null;
 function armDelete(btn, fn) {
   if (armedBtn === btn) { clearTimeout(armedTimer); armedBtn = null; btn.classList.remove('armed'); fn(); return; }
